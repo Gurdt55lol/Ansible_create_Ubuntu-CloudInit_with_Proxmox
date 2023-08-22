@@ -1,0 +1,3 @@
+# this task reguires proxmoxer package
+  # - include_tasks: downloads.yml
+  - include_tasks: setupvm.yml

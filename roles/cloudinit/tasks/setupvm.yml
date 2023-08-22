@@ -1,0 +1,145 @@
+- name: Debug machines variable
+  debug:
+    var: machines
+
+
+- name: Create new VM template from cloud-init image
+  community.general.proxmox_kvm:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_password: "{{ api_password }}"
+    node: "{{ node_target }}"
+    name: "{{ template_name }}"
+    bios: ovmf
+    boot: 'order=scsi0'
+    cores: 1
+    sockets: 1
+    machine: q35
+    memory: 4096
+    ostype: "{{ image_ostype }}"
+    efidisk0:
+      storage: "{{ storage_target }}"
+      format: raw
+      efitype: 4m
+      pre_enrolled_keys: 1
+    serial:
+      serial0: 'socket'
+    vga: serial0
+    scsihw: 'virtio-scsi-single'
+    scsi:
+      scsi0: "{{ storage_target }}:0,iothread=1,discard=on,import-from={{ image }},format=raw"
+    ide:
+      ide2: "local:cloudinit,format=raw"
+    net:
+      net0: 'virtio,bridge=vmbr0,firewall=1'
+    template: true
+    timeout: 500
+  with_items: "{{ machines }}"
+
+
+- name: Debug template_name variable
+  debug:
+    var: template_name
+
+- name: Clone {{ item.name }} VM from cloud-init template
+  register: vm_result
+  community.general.proxmox_kvm:
+    # api_host: "{{ api_host }}"
+    # api_user: "{{ api_user }}"
+    # api_token_id: "{{ api_token_id }}"
+    # api_token_secret: "{{ api_token_secret }}"
+    # name: "{{ item.name }}"
+    # node: "{{ node_target }}"
+    # clone: ubuntu-image
+    # storage: "{{ storage_target }}"
+    api_user: "root@pam"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    api_host: "{{api_host }}"
+    clone: ubuntu-image
+    name: ubuntu2
+    node: lab55
+    storage: local-lvm
+    format: qcow2
+    full: true
+    # timeout: 500
+    timeout: 500
+  with_items: "{{ machines }}"
+
+- name: Grow {{ item.name }} VM disk
+  community.general.proxmox_disk:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    vmid: "{{ vm_result.vmid }}"
+    disk: scsi0
+    size: "{{ item.size }}"
+    state: resized
+    timeout: 500
+  with_items: "{{ machines }}"
+
+- name: Update {{ item.name }} VM configuration
+  vars:
+    ssh_key_path: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
+  community.general.proxmox_kvm:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    node: "{{ node_target }}"
+    vmid: "{{ vm_result.vmid }}"
+    agent: 1
+    cores: "{{ item.cores }}"
+    memory: "{{ item.memory }}"
+    ciuser: "{{ ci_user }}"
+    cipassword: "{{ ci_password }}"
+    ipconfig:
+      ipconfig0: 'ip=dhcp'
+    sshkeys: "{{ lookup('ansible.builtin.file', '{{ ssh_key_path }}') }}"
+    update: true
+  with_items: "{{ machines }}"
+
+- name: Start {{ item.name }} VM
+  community.general.proxmox_kvm:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    node: "{{ node_target }}"
+    vmid: "{{ vm_result.vmid }}"
+    state: started
+  with_items: "{{ machines }}"
+
+- name: Prompt for {{ item.name }} VM host
+  register: target_host_result
+  ansible.builtin.pause:
+    prompt: "Enter host/IP for {{ item.name }} VM"
+  with_items: "{{ machines }}"
+
+- name: Add {{ item.name }} VM host
+  ansible.builtin.add_host:
+    name: "{{ target_host_result.user_input }}"
+    groups: "{{ item.name }}"
+    ansible_user: "{{ ci_user }}"
+  with_items: "{{ machines }}"
+
+- name: Install qemu guest agent on {{ item.name }} VM
+  delegate_to: "{{ target_host_result.user_input }}"
+  delegate_facts: true
+  become: yes
+  ansible.builtin.package:
+    name: qemu-guest-agent
+    state: present
+    update_cache: true
+    install_recommends: false
+  with_items: "{{ machines }}"
+
+- name: Restart qemu guest agent on {{ item.name }} VM
+  delegate_to: "{{ target_host_result.user_input }}"
+  delegate_facts: true
+  become: yes
+  ansible.builtin.service:
+    name: qemu-guest-agent
+    state: restarted
+  with_items: "{{ machines }}"

@@ -1,0 +1,10 @@
+---
+- name: Download cloud-init image
+  register: image
+  ansible.builtin.get_url:
+    url: "{{ image_url }}"
+    dest: /tmp
+    mode: '0644'
+    force: true
+
+

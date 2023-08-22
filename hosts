@@ -1,0 +1,2 @@
+[pve]
+homeserver ansible_host=192.168.0.10 ansible_user=gurdt55 ansible_connection=ssh ansible_ssh_private_key_file=/home/gurdt55/.ssh/id_rsa.pub

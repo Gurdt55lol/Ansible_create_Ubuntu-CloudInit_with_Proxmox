@@ -1,0 +1,25 @@
+
+
+### USER CREDENTIALS ###
+username: gurdt55
+
+email: gurdt55.auth@gmail.com
+
+shell: /bin/bash
+
+password: 5648de45938d1188470a1e828d7d056d5edc8fc68ba9ea9d85dfc0f0a72cfdf5 # hashed using sha256
+
+### system ###
+
+packages:
+  # - vim
+  # - speedtest-cli
+  # - sl
+
+TZ: "Europe/Helsinki"
+
+lan_subnet: 192.168.71.0/24
+
+lan_base: "{{ lan_subnet | regex_replace('.0[0-9]{2}','') }}"
+
+pve_ip: "{{ lan_base }}.33"

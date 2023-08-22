@@ -1,0 +1,32 @@
+
+### ENABLE IF YOU WANT TO CONFIGURE SSH KEYS VIA ANSIBLE ###
+
+- name: put ssh authorized keys for the user
+  ansible.posix.authorized_key:
+    user: '{{ username }}'
+    state: present
+    key: '{{ item }}'
+  with_file:
+    - /mnt/c/Users/Käyttäjä/.ssh/id_rsa.pub
+    - /home/gurdt55/.ssh/id_rsa.pub
+  become: true
+
+# securing ssh
+
+- name: disable ssh password login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+    backup: yes
+  notify: Restart SSH daemon
+
+# - name: Disable root login
+#   lineinfile:
+#     path: "{{ sshd_config_file }}"
+#     regexp: "^PermitRootLogin"
+#     line: "PermitRootLogin no"
+#     backup: yes
+#   notify: Restart SSH daemon
+
+#- meta: flush_hand # to force handler execution

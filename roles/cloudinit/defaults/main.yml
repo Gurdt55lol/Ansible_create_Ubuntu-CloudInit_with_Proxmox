@@ -1,0 +1,36 @@
+---
+
+# cloud-init image configuration
+image_url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+image_ostype: l26
+
+# Proxmox API variables
+api_host: "{{ ansible_host }}"
+api_user: root@pam
+api_password: "{{ ansible_password }}"
+api_token_id: ansible
+api_token_secret: b35dbb9b-4ba4-44e7-989c-129ec00520f6
+
+# Proxmox node target
+node_target: "192.168.0.10"
+
+# VM storage target
+storage_target: local-lvm
+
+# VM template name
+template_name: ubuntu_image
+
+# cloud-init configuration
+ci_user: gurdt55
+ci_password: "{{ ansible_password }}"
+
+# VM configuration (looped over)
+machines:
+  - name: homeserver
+    size: 100G
+    cores: 2
+    memory: 8192
+  # - name: test2
+  #   size: 32G
+  #   cores: 2
+  #   memory: 16384

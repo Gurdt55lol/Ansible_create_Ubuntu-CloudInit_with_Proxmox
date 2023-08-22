@@ -1,0 +1,5 @@
+# The command to install is ansible-galaxy install -r requirements.yml
+
+# reguired modules: 
+# - community.general.proxmox_kvm (ansible-galaxy collection install community.general)
+
