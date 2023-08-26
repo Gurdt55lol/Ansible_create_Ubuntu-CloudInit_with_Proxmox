@@ -13,13 +13,18 @@
   ansible.builtin.apt:
     name:
       - pip
-    # update_cache: true
-    # install_recommends: false
+    update_cache: true
+    install_recommends: false
     state: present
 
 - name: Install proxmoxer
   ansible.builtin.pip:
     name: proxmoxer
+    state: present
+
+- name: Install requests
+  ansible.builtin.pip:
+    name: requests
     state: present
 
 - name: echo "unattended-upgrades unattended-upgrades/enable_auto_updates boolean true" | sudo debconf-set-selections  - auto install security updates

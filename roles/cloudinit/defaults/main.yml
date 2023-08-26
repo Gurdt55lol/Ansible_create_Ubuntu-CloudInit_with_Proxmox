@@ -4,21 +4,29 @@
 image_url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
 image_ostype: l26
 
-# Proxmox API variables
-api_host: "{{ ansible_host }}"
+# Image location
+
+image_location: /tmp/jammy-server-cloudimg-amd64.img
+
+# Proxmox API variables # the 
+api_host: 192.168.0.10
 api_user: root@pam
 api_password: "{{ ansible_password }}"
-api_token_id: ansible
-api_token_secret: b35dbb9b-4ba4-44e7-989c-129ec00520f6
+api_token_id: ansibleroot # root@pam!ansibleroot
+api_token_secret: 4e05e2b3-750f-465f-b4bf-9d14d5ae7b0c
 
 # Proxmox node target
-node_target: "192.168.0.10"
+node_target: "proxmox"
 
 # VM storage target
-storage_target: local-lvm
+storage_target: local
 
 # VM template name
-template_name: ubuntu_image
+template_name: ubuntu.image
+
+# VM template vmid
+
+template_vmid: 115
 
 # cloud-init configuration
 ci_user: gurdt55
@@ -26,11 +34,11 @@ ci_password: "{{ ansible_password }}"
 
 # VM configuration (looped over)
 machines:
-  - name: homeserver
+  - name: homeserver.lab
     size: 100G
     cores: 2
     memory: 8192
-  # - name: test2
-  #   size: 32G
-  #   cores: 2
-  #   memory: 16384
+  - name: game.server
+    size: 100G
+    cores: 2
+    memory: 5500

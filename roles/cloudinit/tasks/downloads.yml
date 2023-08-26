@@ -1,4 +1,9 @@
 ---
+- name: Check that the cloudinit file exists
+  stat:
+    path: /tmp/jammy-server-cloudimg-amd64.img
+  register: stat_result
+
 - name: Download cloud-init image
   register: image
   ansible.builtin.get_url:
@@ -6,5 +11,6 @@
     dest: /tmp
     mode: '0644'
     force: true
+  when: not stat_result.stat.exists
 
 
