@@ -1,39 +1,48 @@
 ---
 
 # cloud-init image configuration
-image_url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-image_ostype: l26
+image_url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" # this is the usrl the image will be downloaded from
+
+image_ostype: l26 # image os type is set for linux
+
 
 # Image location
 
-image_location: /tmp/jammy-server-cloudimg-amd64.img
+image_location: /tmp/jammy-server-cloudimg-amd64.img # the location image is saved to (change your own filename, mine was [jammy-server-cloudimg-amd64.img])
 
-# Proxmox API variables # the 
-api_host: 192.168.0.10
-api_user: root@pam
-api_password: "{{ ansible_password }}"
-api_token_id: ansibleroot # root@pam!ansibleroot
-api_token_secret: 4e05e2b3-750f-465f-b4bf-9d14d5ae7b0c
+
+# Proxmox API variables # just google howto do this
+
+api_host: 192.168.69.69 # proxmox location on the network ( this can also be a dns name )
+
+api_user: root@pam # I was lazy in doing all the permission stuff so i just went with root api, with no priviledge seperation
+
+api_password: "{{ ansible_password }}" # change this to the password of the api_user, I'm using the same password the ansible used to log in with ssh
+
+api_token_id: ansibleroot # The id u have saved while making the api
+
+api_token_secret: super duper secret api key that was given to u while creation of the api
+
 
 # Proxmox node target
-node_target: "proxmox"
+node_target: "proxmox" #this is the name of the node, not the dns name
 
 # VM storage target
-storage_target: local
+storage_target: local # eg. local or local-lvm
 
 # VM template name
-template_name: ubuntu.image
+template_name: ubuntu.image # this is just the name for the template, nothing to change, if u don't wanna
 
 # VM template vmid
 
-template_vmid: 115
+template_vmid: 6900 # vmid of the template, make sure it's not taken
 
 # cloud-init configuration
-ci_user: gurdt55
-ci_password: "{{ ansible_password }}"
+ci_user: gurdt55 # user for cloud init machine
+ci_password: "{{ ansible_password }}" # password for the cloud init machine
 
 # VM configuration (looped over)
-machines:
+machines:                       ### THESE ARE THE MACHINES CREATED, ADD MORE IF YOU WANT ###
   - name: homeserver.lab
     size: 100G
     cores: 2
