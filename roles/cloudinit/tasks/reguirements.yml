@@ -1,4 +1,4 @@
-- name: Install proxmoxer
+- name: Install requirements
   ansible.builtin.apt:
     name: python3-proxmoxer
     state: present
