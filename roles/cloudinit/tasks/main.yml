@@ -1,3 +1,14 @@
 # this task reguires proxmoxer package
-  - include_tasks: downloads.yml
-  - include_tasks: setupvm.yml
+- name: Get host ip
+  hosts: homeserver
+  tasks:
+  - name: Show host's ip
+    debug:
+      msg: "{{ api_host }}"
+
+- name: Start requirements.yml
+  include_tasks: reguirements.yml
+- name: Start downloads.yml    
+  include_tasks: downloads.yml
+- name: Start setupvm.yml
+  include_tasks: setupvm.yml

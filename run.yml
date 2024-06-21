@@ -2,7 +2,20 @@
 - hosts: all
   become: yes
 
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  pre_tasks:
+    - name: Include vault
+      ansible.builtin.include_vars:
+        file: encrypted.yml
 
   roles:
     - role: system
+      vars:
+        hostname: pve1
+        update_packages: false
+        packages:
+          - sudo
+          - htop
     - role: cloudinit
