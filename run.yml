@@ -18,4 +18,8 @@
         packages:
           - sudo
           - htop
-    - role: cloudinit
+    - role: ansibleRole-proxmox-templates
+      cloudimgs:
+        - url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+          templateName: ubuntu-20.04-server
+          additionalDescription: ""

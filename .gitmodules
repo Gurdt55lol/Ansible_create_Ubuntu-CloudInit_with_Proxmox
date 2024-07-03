@@ -1,0 +1,3 @@
+[submodule "roles/ansibleRole-proxmox-templates"]
+	path = roles/ansibleRole-proxmox-templates
+	url = https://github.com/Gurdt55lol/ansibleRole-proxmox-templates
