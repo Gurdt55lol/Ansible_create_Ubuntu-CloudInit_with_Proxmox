@@ -1,0 +1,42 @@
+### USER CREDENTIALS ###
+username: gurdt55
+
+password: "{{ user_password }}"
+
+email: gurdt55.auth@gmail.com
+
+shell: /bin/bash
+
+### system ###
+
+update_packages: true
+
+packages:
+  # - qemu-guest-agent
+  # - qrencode # this is for creating wireguard connect qr code
+
+hostname: homeserver
+
+pip_install_packages:
+  - name: docker
+
+TZ: "Europe/Helsinki"
+
+lan_subnet: 192.168.0.0/24
+
+lan_base: "{{ lan_subnet | regex_replace('.0[0-9]{2}','') }}"
+
+homeserver_ip: "{{ lan_base }}.5"
+
+setup_ufw: false
+
+# # wireguard host
+# wgHost: go55.duckdns.org
+# wgPort: 69
+
+# # wireguard clients
+# wgClients:
+#   - name: phone
+#     conf: phoneVPN.conf
+#   - name: MSI
+#     conf: MSIVPN.conf

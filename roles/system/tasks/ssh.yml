@@ -1,0 +1,32 @@
+
+### ENABLE IF YOU WANT TO CONFIGURE SSH KEYS VIA ANSIBLE ###
+
+- name: Put ssh authorized keys for the user
+  ansible.posix.authorized_key:
+    user: '{{ username }}'
+    state: present
+    key: '{{ item }}'
+  with_file:
+    - /mnt/c/Users/Käyttäjä/.ssh/id_rsa.pub
+    - /home/gurdt55/.ssh/id_rsa.pub
+  become: true
+
+- name: Disable ssh password login
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+  notify: Restart SSHD
+
+- name: Allow ssh in ufw
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+    src: '{{ item }}'
+  loop:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+  when: setup_ufw == true
+
+#- meta: flush_hand # to force handler execution

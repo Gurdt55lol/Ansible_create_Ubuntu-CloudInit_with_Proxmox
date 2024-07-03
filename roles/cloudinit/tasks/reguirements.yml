@@ -1,4 +1,7 @@
-- name: Install requirements
-  ansible.builtin.apt:
-    name: python3-proxmoxer
+- name: Ensure requirements in place
+  package:
+    name:
+      - libguestfs-tools
+      - python3-libvirt
     state: present
+  become: true

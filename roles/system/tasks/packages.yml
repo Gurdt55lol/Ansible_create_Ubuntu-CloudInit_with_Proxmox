@@ -1,0 +1,36 @@
+- name: update packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+  ignore_errors: true
+  when: update_packages == true
+
+- name: install essential packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+
+- name: echo "unattended-upgrades unattended-upgrades/enable_auto_updates boolean true" | sudo debconf-set-selections  - auto install security updates
+  debconf: name=unattended-upgrades question=unattended-upgrades/enable_auto_updates vtype=boolean value='true'
+
+- name: apt install unattended-upgrades
+  apt: name=unattended-upgrades
+
+- name: dpkg-reconfigure -f noninteractive unattended-upgrades
+  command:
+    cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
+    creates: /etc/apt/apt.conf.d/20auto-upgradesS
+  ignore_errors: true
+
+- name: Setup ufw
+  block:
+    - name: Install uwf
+      apt:
+        name: ufw
+        state: present
+
+    - name: Enable ufw and set policy as deny
+      community.general.ufw:
+        state: enabled
+        policy: deny
+  when: setup_ufw == true
