@@ -18,15 +18,4 @@
     line: "PasswordAuthentication no"
   notify: Restart SSHD
 
-- name: Allow ssh in ufw
-  community.general.ufw:
-    rule: allow
-    name: OpenSSH
-    src: '{{ item }}'
-  loop:
-    - 10.0.0.0/8
-    - 172.16.0.0/12
-    - 192.168.0.0/16
-  when: setup_ufw == true
-
 #- meta: flush_hand # to force handler execution

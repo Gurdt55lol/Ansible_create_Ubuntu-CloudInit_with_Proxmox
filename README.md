@@ -13,6 +13,6 @@ The only reguiremen't for this playbook is community.general.proxmox_kvm and it 
 
 make changes only to ./cloudinit/defaults/main.yml
 
-The manings of the variables are explained in there
+The meanings of the variables are explained in there
 
 Good luck on troubleshooting, because I can couranteen that it won't work fist time

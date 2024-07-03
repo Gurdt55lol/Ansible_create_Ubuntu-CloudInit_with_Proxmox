@@ -21,16 +21,3 @@
     cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
     creates: /etc/apt/apt.conf.d/20auto-upgradesS
   ignore_errors: true
-
-- name: Setup ufw
-  block:
-    - name: Install uwf
-      apt:
-        name: ufw
-        state: present
-
-    - name: Enable ufw and set policy as deny
-      community.general.ufw:
-        state: enabled
-        policy: deny
-  when: setup_ufw == true
