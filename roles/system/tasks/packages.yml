@@ -1,3 +1,9 @@
+- name: Disable enterprise repostitory
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    regexp: '^deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise'
+    line: "# deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise"
+
 - name: update packages
   apt:
     upgrade: yes

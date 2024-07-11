@@ -11,13 +11,13 @@
         file: encrypted.yml
 
   roles:
-    # - role: system
-    #   vars:
-    #     hostname: pve1
-    #     update_packages: true
-    #     packages:
-    #       - sudo
-    #       - htop
+    - role: system
+      vars:
+        hostname: pve1
+        update_packages: true
+        packages:
+          - sudo
+          - htop
     - role: ansibleRole-proxmox-templates
       cloudimgs:
         - url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
