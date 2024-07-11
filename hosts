@@ -1,2 +1,2 @@
 [pve]
-homeserver ansible_host=192.168.0.10 ansible_user=gurdt55 ansible_connection=ssh ansible_python_interpreter="/usr/bin/python3"
+pve1 ansible_host=192.168.0.10 ansible_connection=ssh ansible_python_interpreter="/usr/bin/python3"

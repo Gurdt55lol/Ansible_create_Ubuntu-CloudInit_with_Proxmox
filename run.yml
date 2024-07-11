@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: pve1
   become: yes
 
   vars:
@@ -14,7 +14,7 @@
     - role: system
       vars:
         hostname: pve1
-        update_packages: false
+        update_packages: true
         packages:
           - sudo
           - htop
