@@ -1,7 +1,7 @@
 ---
 
 # cloud-init image configuration
-image_url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" # this is the usrl the image will be downloaded from
+image_url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img" # this is the url that the image will be downloaded from
 
 image_ostype: l26 # image os type is set for linux
 
