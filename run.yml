@@ -23,3 +23,8 @@
         - url: "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
           templateName: ubuntu-20.04-server
           additionalDescription: ""
+          templateID: 8000
+          user: gurdt55
+          ipconfig0: ip=dhcp # ip6=auto,ip=dhcp 
+          sshkey: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}" # ssh key that will be added to the user, this should be your public key.
+          installAgent: true # if true the proxmox agent will be installed on the VMs
